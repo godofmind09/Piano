@@ -6,11 +6,13 @@ const whiteKeys = document.querySelectorAll('.key.white')
 const blackKeys = document.querySelectorAll('.key.black')
 
 keys.forEach(key=>{
+    const noteAudio = document.getElementById(key.dataset.note)
     key.addEventListener('click',()=> playNote(key))
+    noteAudio.addEventListener('ended', () => key.classList.remove('active'))
 })
 document.addEventListener('keydown',e=>{
     if(e.repeat)return
-    const key = e.key
+    const key = e.key.toLowerCase()
     const whiteKeyIndex = WHITE_KEYS.indexOf(key)
     const blackKeyIndex = BLACK_KEYS.indexOf(key)
     
@@ -20,9 +22,6 @@ document.addEventListener('keydown',e=>{
 function playNote(key){
     const noteAudio = document.getElementById(key.dataset.note)
     noteAudio.currentTime = 0
-    noteAudio.play()
     key.classList.add('active')
-    noteAudio.addEventListener('ended',()=>{
-        key.classList.remove('active')
-    })
+    noteAudio.play().catch(() => key.classList.remove('active'))
 }
